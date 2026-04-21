@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Service Area Map: Setup and Management Guide</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0f1117;
+    --surface: #1a1d27;
+    --surface-alt: #222632;
+    --border: #2a2e3b;
+    --text: #e4e5ea;
+    --text-muted: #8b8d98;
+    --text-dim: #5f6170;
+    --accent: #4f8ff7;
+    --accent-dim: rgba(79, 143, 247, 0.12);
+    --success: #34d399;
+    --success-dim: rgba(52, 211, 153, 0.1);
+    --warn: #fbbf24;
+    --warn-dim: rgba(251, 191, 36, 0.1);
+    --radius: 10px;
+    --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    --mono: ui-monospace, 'Cascadia Code', 'Courier New', monospace;
+  }
+
+  body {
+    font-family: var(--font);
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    font-size: 15px;
+  }
+
+  @media print {
+    body { background: #fff; color: #111; font-size: 12pt; }
+    .page { padding: 0; }
+    .toc, .notes-list li { background: #f5f5f5; border-color: #ccc; }
+    .step-number { background: #111; color: #fff; print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+    .callout { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+    a { color: #1d4ed8; }
+  }
+
+  .page {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 48px 24px 80px;
+  }
+
+  .doc-header {
+    margin-bottom: 40px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .doc-header h1 {
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 1.3;
+    margin-bottom: 6px;
+    letter-spacing: -0.02em;
+  }
+
+  .doc-header .subtitle {
+    font-size: 14px;
+    color: var(--text-muted);
+  }
+
+  .toc {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px 24px;
+    margin-bottom: 36px;
+  }
+
+  .toc-title {
+    font-weight: 600;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    margin-bottom: 12px;
+  }
+
+  .toc ol {
+    padding-left: 20px;
+    margin: 0;
+  }
+
+  .toc li {
+    margin-bottom: 4px;
+    line-height: 1.6;
+    font-size: 14px;
+  }
+
+  .toc a {
+    color: var(--accent);
+    text-decoration: none;
+  }
+
+  .toc a:hover { text-decoration: underline; }
+
+  .toc a:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+
+  .section {
+    margin-bottom: 44px;
+  }
+
+  .section h2 {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 14px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+    letter-spacing: -0.01em;
+  }
+
+  .section p {
+    margin-bottom: 12px;
+    color: var(--text-muted);
+  }
+
+  strong {
+    color: var(--text);
+    font-weight: 600;
+  }
+
+  .steps {
+    list-style: none;
+    padding: 0;
+    margin: 16px 0;
+  }
+
+  .step {
+    display: flex;
+    gap: 14px;
+    margin-bottom: 20px;
+    align-items: flex-start;
+  }
+
+  .step-number {
+    flex-shrink: 0;
+    width: 28px;
+    height: 28px;
+    background: var(--accent);
+    color: #fff;
+    font-size: 13px;
+    font-weight: 700;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 1px;
+  }
+
+  .step-content {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .step-content p {
+    margin-bottom: 6px;
+    color: var(--text-muted);
+  }
+
+  .step-content p:last-child { margin-bottom: 0; }
+
+  .callout {
+    padding: 14px 18px;
+    border-radius: var(--radius);
+    border-left: 4px solid;
+    margin: 18px 0;
+    font-size: 13px;
+    line-height: 1.6;
+  }
+
+  .callout p {
+    color: inherit;
+    margin-bottom: 4px;
+    font-size: 13px;
+  }
+
+  .callout p:last-child { margin-bottom: 0; }
+
+  .callout-info {
+    background: var(--accent-dim);
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  .callout-tip {
+    background: var(--success-dim);
+    border-color: var(--success);
+    color: var(--success);
+  }
+
+  .callout-warn {
+    background: var(--warn-dim);
+    border-color: var(--warn);
+    color: var(--warn);
+  }
+
+  .callout-label {
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    margin-bottom: 4px;
+    display: block;
+  }
+
+  a {
+    color: var(--accent);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  a:hover { color: #6da8ff; }
+
+  a:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+
+  .notes-list {
+    list-style: none;
+    padding: 0;
+    margin: 16px 0;
+  }
+
+  .notes-list li {
+    padding: 12px 16px;
+    margin-bottom: 8px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    color: var(--text-muted);
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  .doc-footer {
+    margin-top: 48px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+    font-size: 12px;
+    color: var(--text-dim);
+  }
+</style>
+</head>
+<body>
+
+<main class="page" role="main">
+
+  <header class="doc-header">
+    <h1>Service Area Map: Setup and Management Guide</h1>
+    <p class="subtitle">Everything you need to create, embed, and maintain your service area map</p>
+  </header>
+
+  <nav class="toc" aria-label="Table of contents">
+    <div class="toc-title">Contents</div>
+    <ol>
+      <li><a href="#overview">How It Works</a></li>
+      <li><a href="#generate-kml">Step 1: Generate Your Boundary File</a></li>
+      <li><a href="#create-map">Step 2: Create Your Google My Map</a></li>
+      <li><a href="#import-kml">Step 3: Import Your Boundaries</a></li>
+      <li><a href="#share-map">Step 4: Share Your Map for Embedding</a></li>
+      <li><a href="#embed">Step 5: Get the Embed Code</a></li>
+      <li><a href="#add-zips">Updating Your Service Area</a></li>
+      <li><a href="#remove-zips">Removing Zip Codes</a></li>
+      <li><a href="#styling">Changing Colors and Styles</a></li>
+      <li><a href="#markers">Adding Office Locations or Markers</a></li>
+      <li><a href="#notes">Important Notes</a></li>
+    </ol>
+  </nav>
+
+
+  <section class="section" id="overview">
+    <h2>How It Works</h2>
+    <p>
+      Your service area map is powered by <strong>Google My Maps</strong>, a free tool from Google
+      that lets you create custom maps. You will create a map, import your zip code boundaries into it,
+      and then embed it on your website.
+    </p>
+    <p>
+      Once the map is embedded, <strong>any changes you make in Google My Maps will appear on your
+      website automatically</strong>. You do not need to touch your website or update any code.
+      Just edit the map and the changes go live.
+    </p>
+    <p>
+      This guide walks you through the entire process from scratch. You will need a Google account
+      (any Gmail or Google Workspace account will work).
+    </p>
+  </section>
+
+
+  <section class="section" id="generate-kml">
+    <h2>Step 1: Generate Your Boundary File</h2>
+    <p>
+      First, you need to turn your list of zip codes into a KML file. A KML file contains the
+      actual geographic boundary shapes for each zip code, which is what creates the shaded
+      regions on your map.
+    </p>
+
+    <ol class="steps">
+      <li class="step">
+        <span class="step-number" aria-hidden="true">1</span>
+        <div class="step-content">
+          <p>Open the <strong><a href="generate-kml.html">Zip Code to KML Generator</a></strong>.</p>
+        </div>
+      </li>
+      <li class="step">
+        <span class="step-number" aria-hidden="true">2</span>
+        <div class="step-content">
+          <p>Paste your zip codes into the text box. You can separate them with commas, spaces, or put each one on its own line.</p>
+        </div>
+      </li>
+      <li class="step">
+        <span class="step-number" aria-hidden="true">3</span>
+        <div class="step-content">
+          <p>Optionally, choose a fill color and give your area a name (e.g. "Atlanta Metro Service Area").</p>
+        </div>
+      </li>
+      <li class="step">
+        <span class="step-number" aria-hidden="true">4</span>
+        <div class="step-content">
+          <p>Click <strong>Generate KML</strong>. The tool will fetch boundary data from the US Census Bureau. This may take a moment depending on how many zip codes you have.</p>
+        </div>
+      </li>
+      <li class="step">
+        <span class="step-number" aria-hidden="true">5</span>
+        <div class="step-content">
+          <p>When it finishes, click <strong>Download KML File</strong> and save the file to your computer.</p>
+        </div>
+      </li>
+    </ol>
+
+    <div class="callout callout-tip">
+      <span class="callout-label">Tip</span>
+      <p>Save the KML generator page somewhere convenient. You will use it again whenever you need to add new zip codes to your service area.</p>
+    </div>
+  </section>
+
+
+  <section class="section" id="create-map">
+    <h2>Step 2: Create Your Google My Map</h2>
+
+    <ol class="steps">
+      <li class="step">
+        <span class="step-number" aria-hidden="true">1</span>
+        <div class="step-content">
+          <p>Go to <a href="https://mymaps.google.com" target="_blank" rel="noopener">mymaps.google.com</a> and sign in with your Google account. If you do not have a Google account, you will need to create one first at <a href="https://accounts.google.com/signup" target="_blank" rel="noopener">accounts.google.com/signup</a>.</p>
+        </div>
+      </li>
+      <li class="step">
+        <span class="step-number" aria-hidden="true">2</span>
+        <div class="step-content">
+          <p>Click the <strong>+ Create a new map</strong> button. A blank map will open.</p>
+        </div>
+      </li>
+      <li class="step">
+        <span class="step-number" aria-hidden="true">3</span>
+        <div class="step-content">
+          <p>Click <strong>Untitled map</strong> at the top left and give your map a name (e.g. "Service Area Map"). You can also add a description if you like.</p>
+        </div>
+      </li>
+    </ol>
+  </section>
+
+
+  <section class="section" id="import-kml">
+    <h2>Step 3: Import Your Boundaries</h2>
+
+    <ol class="steps">
+      <li class="step">
+        <span class="step-number" aria-hidden="true">1</span>
+        <div class="step-content">
+          <p>In your new map, you will see a layer called "Untitled layer" in the left panel. Click <strong>Import</strong> underneath it.</p>
+        </div>
+      </li>
+      <li class="step">
+        <span class="step-number" aria-hidden="true">2</span>
+        <div class="step-content">
+          <p>Drag and drop the KML file you downloaded in Step 1, or click <strong>Select a file from your device</strong> and browse to it.</p>
+        </div>
+      </li>
+      <li class="step">
+        <span class="step-number" aria-hidden="true">3</span>
+        <div class="step-content">
+          <p>Google My Maps will process the file and display your zip code boundaries as shaded regions on the map. This may take a few seconds.</p>
+        </div>
+      </li>
+      <li class="step">
+        <span class="step-number" aria-hidden="true">4</span>
+        <div class="step-content">
+          <p>Click the layer name ("Untitled layer" or the KML filename) and rename it to something descriptive like "Service Area".</p>
+        </div>
+      </li>
+    </ol>
+
+    <div class="callout callout-info">
+      <span class="callout-label">Note</span>
+      <p>If your boundaries do not appear right away, try zooming out or using the search bar to navigate to the area your zip codes cover.</p>
+    </div>
+  </section>
+
+
+  <section class="section" id="share-map">
+    <h2>Step 4: Share Your Map for Embedding</h2>
+    <p>
+      For the map to display on your website, it needs to be publicly viewable. This does not
+      give anyone editing access. It only allows people to see the map.
+    </p>
+
+    <ol class="steps">
+      <li class="step">
+        <span class="step-number" aria-hidden="true">1</span>
+        <div class="step-content">
+          <p>Click the <strong>Share</strong> button in the left panel (it looks like a person with a plus sign).</p>
+        </div>
+      </li>
+      <li class="step">
+        <span class="step-number" aria-hidden="true">2</span>
+        <div class="step-content">
+          <p>Under <strong>General access</strong>, change the setting from "Restricted" to <strong>Anyone with the link</strong>.</p>
+        </div>
+      </li>
+      <li class="step">
+        <span class="step-number" aria-hidden="true">3</span>
+        <div class="step-content">
+          <p>Make sure the permission is set to <strong>Viewer</strong> (not Editor). This is the default.</p>
+        </div>
+      </li>
+      <li class="step">
+        <span class="step-number" aria-hidden="true">4</span>
+        <div class="step-content">
+          <p>Click <strong>Done</strong>.</p>
+        </div>
+      </li>
+    </ol>
+
+    <div class="callout callout-warn">
+      <span class="callout-label">Important</span>
+      <p>If you skip this step or change the sharing back to "Restricted" later, the map on your website will appear blank to visitors.</p>
+    </div>
+  </section>
+
+
+  <section class="section" id="embed">
+    <h2>Step 5: Get the Embed Code</h2>
+
+    <ol class="steps">
+      <li class="step">
+        <span class="step-number" aria-hidden="true">1</span>
+        <div class="step-content">
+          <p>Click the <strong>three vertical dots</strong> menu next to your map title in the left panel.</p>
+        </div>
+      </li>
+      <li class="step">
+        <span class="step-number" aria-hidden="true">2</span>
+        <div class="step-content">
+          <p>Select <strong>Embed on my site</strong>.</p>
+        </div>
+      </li>
+      <li class="step">
+        <span class="step-number" aria-hidden="true">3</span>
+        <div class="step-content">
+          <p>A box will appear with an HTML code snippet that starts with <code>&lt;iframe</code>. Copy this entire snippet.</p>
+        </div>
+      </li>
+      <li class="step">
+        <span class="step-number" aria-hidden="true">4</span>
+        <div class="step-content">
+          <p>Send the embed code to your web team so they can add it to your website. If you manage your own site, paste it into an HTML block or widget on the page where you want the map to appear.</p>
+        </div>
+      </li>
+    </ol>
+
+    <div class="callout callout-tip">
+      <span class="callout-label">That's it</span>
+      <p>Your map is now live on your website. From this point forward, any changes you make to the map in Google My Maps will automatically update on your site. The sections below cover how to make those changes.</p>
+    </div>
+  </section>
+
+
+  <section class="section" id="add-zips">
+    <h2>Updating Your Service Area</h2>
+    <p>When you expand into new zip codes, you have two options.</p>
+
+    <h3 style="font-size:15px; font-weight:600; margin: 20px 0 12px; color: var(--text);">Option A: Add new zip codes to the existing map</h3>
+    <p>Use this when you are adding a few zip codes and want to keep everything you already have.</p>
+
+    <ol class="steps">
+      <li class="step">
+        <span class="step-number" aria-hidden="true">1</span>
+        <div class="step-content">
+          <p>Open the <strong><a href="generate-kml.html">Zip Code to KML Generator</a></strong> and enter only the <strong>new</strong> zip codes.</p>
+        </div>
+      </li>
+      <li class="step">
+        <span class="step-number" aria-hidden="true">2</span>
+        <div class="step-content">
+          <p>Generate and download the KML file.</p>
+        </div>
+      </li>
+      <li class="step">
+        <span class="step-number" aria-hidden="true">3</span>
+        <div class="step-content">
+          <p>Go to <a href="https://mymaps.google.com" target="_blank" rel="noopener">mymaps.google.com</a>, open your map, and click <strong>Add layer</strong> in the left panel.</p>
+        </div>
+      </li>
+      <li class="step">
+        <span class="step-number" aria-hidden="true">4</span>
+        <div class="step-content">
+          <p>Click <strong>Import</strong> on the new layer and upload the KML file. The new boundaries will appear alongside your existing ones.</p>
+        </div>
+      </li>
+    </ol>
+
+    <h3 style="font-size:15px; font-weight:600; margin: 20px 0 12px; color: var(--text);">Option B: Replace the entire service area</h3>
+    <p>Use this when your zip code list has changed significantly and you want a clean start.</p>
+
+    <ol class="steps">
+      <li class="step">
+        <span class="step-number" aria-hidden="true">1</span>
+        <div class="step-content">
+          <p>Open the <strong><a href="generate-kml.html">Zip Code to KML Generator</a></strong> and enter your <strong>complete, updated</strong> list of zip codes.</p>
+        </div>
+      </li>
+      <li class="step">
+        <span class="step-number" aria-hidden="true">2</span>
+        <div class="step-content">
+          <p>Generate and download the KML file.</p>
+        </div>
+      </li>
+      <li class="step">
+        <span class="step-number" aria-hidden="true">3</span>
+        <div class="step-content">
+          <p>Go to <a href="https://mymaps.google.com" target="_blank" rel="noopener">mymaps.google.com</a> and open your map.</p>
+        </div>
+      </li>
+      <li class="step">
+        <span class="step-number" aria-hidden="true">4</span>
+        <div class="step-content">
+          <p>Delete the old layer by clicking the <strong>three dots</strong> next to the layer name and selecting <strong>Delete this layer</strong>.</p>
+        </div>
+      </li>
+      <li class="step">
+        <span class="step-number" aria-hidden="true">5</span>
+        <div class="step-content">
+          <p>Click <strong>Add layer</strong>, then <strong>Import</strong>, and upload the new KML file.</p>
+        </div>
+      </li>
+    </ol>
+  </section>
+
+
+  <section class="section" id="remove-zips">
+    <h2>Removing Zip Codes</h2>
+    <p>To remove individual zip codes from your map:</p>
+
+    <ol class="steps">
+      <li class="step">
+        <span class="step-number" aria-hidden="true">1</span>
+        <div class="step-content">
+          <p>Open your map at <a href="https://mymaps.google.com" target="_blank" rel="noopener">mymaps.google.com</a>.</p>
+        </div>
+      </li>
+      <li class="step">
+        <span class="step-number" aria-hidden="true">2</span>
+        <div class="step-content">
+          <p>Click on the shaded region you want to remove. A small info window will pop up showing the zip code.</p>
+        </div>
+      </li>
+      <li class="step">
+        <span class="step-number" aria-hidden="true">3</span>
+        <div class="step-content">
+          <p>Click the <strong>trash can icon</strong> in the info window to delete that boundary.</p>
+        </div>
+      </li>
+    </ol>
+
+    <div class="callout callout-tip">
+      <span class="callout-label">Removing many at once</span>
+      <p>
+        If you need to remove a lot of zip codes, it is faster to regenerate the KML file with your
+        updated list and replace the entire layer (see Option B above).
+      </p>
+    </div>
+  </section>
+
+
+  <section class="section" id="styling">
+    <h2>Changing Colors and Styles</h2>
+
+    <ol class="steps">
+      <li class="step">
+        <span class="step-number" aria-hidden="true">1</span>
+        <div class="step-content">
+          <p>Open your map at <a href="https://mymaps.google.com" target="_blank" rel="noopener">mymaps.google.com</a>.</p>
+        </div>
+      </li>
+      <li class="step">
+        <span class="step-number" aria-hidden="true">2</span>
+        <div class="step-content">
+          <p>To change the color of <strong>all regions at once</strong>, click the <strong>paint bucket icon</strong> next to the layer name in the left panel.</p>
+        </div>
+      </li>
+      <li class="step">
+        <span class="step-number" aria-hidden="true">3</span>
+        <div class="step-content">
+          <p>To change a <strong>single region</strong>, click on it directly, then click the paint bucket icon in the info window that appears.</p>
+        </div>
+      </li>
+      <li class="step">
+        <span class="step-number" aria-hidden="true">4</span>
+        <div class="step-content">
+          <p>Choose a color from the palette, or click <strong>More</strong> to enter a custom hex color code (e.g. <code>#3b82f6</code>).</p>
+        </div>
+      </li>
+    </ol>
+  </section>
+
+
+  <section class="section" id="markers">
+    <h2>Adding Office Locations or Markers</h2>
+    <p>You can add pin markers to highlight your office, warehouse, or other key locations.</p>
+
+    <ol class="steps">
+      <li class="step">
+        <span class="step-number" aria-hidden="true">1</span>
+        <div class="step-content">
+          <p>Open your map at <a href="https://mymaps.google.com" target="_blank" rel="noopener">mymaps.google.com</a>.</p>
+        </div>
+      </li>
+      <li class="step">
+        <span class="step-number" aria-hidden="true">2</span>
+        <div class="step-content">
+          <p>Click the <strong>marker icon</strong> (looks like a pin) in the toolbar below the search bar.</p>
+        </div>
+      </li>
+      <li class="step">
+        <span class="step-number" aria-hidden="true">3</span>
+        <div class="step-content">
+          <p>Click on the map where you want to place the marker.</p>
+        </div>
+      </li>
+      <li class="step">
+        <span class="step-number" aria-hidden="true">4</span>
+        <div class="step-content">
+          <p>Give it a name (e.g. "Main Office") and optionally add a description, photo, or custom icon.</p>
+        </div>
+      </li>
+    </ol>
+
+    <p>
+      You can also type an address into the search bar at the top of the map, then click
+      <strong>Add to map</strong> to pin that location.
+    </p>
+  </section>
+
+
+  <section class="section" id="notes">
+    <h2>Important Notes</h2>
+
+    <ul class="notes-list">
+      <li>
+        <strong>Changes are live immediately.</strong> As soon as you save in Google My Maps,
+        the map on your website will reflect the change. There is no separate publish step.
+      </li>
+      <li>
+        <strong>Do not delete the map itself.</strong> Your website is linked to this specific map.
+        If you delete the map, the embedded map on your website will stop working. If this
+        happens by accident, contact your web team.
+      </li>
+      <li>
+        <strong>Do not change the sharing settings.</strong> The map must stay set to
+        "Anyone with the link can view" for the embed to work.
+        If sharing is turned off, the map will appear blank to your website visitors.
+      </li>
+ 
+    </ul>
+  </section>
+
+
+
+  <footer class="doc-footer">
+    
+  </footer>
+
+</main>
+
+</body>
+</html>
