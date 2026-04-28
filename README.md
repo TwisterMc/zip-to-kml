@@ -19,26 +19,6 @@ A small, static web tool for generating KML boundary files from U.S. ZIP codes u
 - Custom area name and fill color
 - One-click KML download
 
-## Quick Start
-
-Because this app uses browser security policies, run it from a local web server (recommended) instead of opening the HTML files directly with `file://`.
-
-### Option 1: Python
-
-```bash
-cd /path/to/zip-to-kml
-python3 -m http.server 8000
-```
-
-Then open:
-
-- `http://localhost:8000/index.html`
-- `http://localhost:8000/generate-kml.html`
-
-### Option 2: VS Code Live Server
-
-If you use the Live Server extension, start the server in this folder and open `index.html`.
-
 ## How to Use the Generator
 
 1. Open `generate-kml.html`.
