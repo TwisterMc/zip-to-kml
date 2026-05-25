@@ -37,6 +37,10 @@
         --mono: -system-monospace, monospace;
       }
 
+      html {
+        font-size: 100%;
+      }
+
       body {
         font-family: var(--font);
         background: var(--bg);
@@ -46,6 +50,7 @@
         justify-content: center;
         padding: 40px 20px;
         line-height: 1.5;
+        font-size: 1rem;
       }
 
       a {
@@ -74,14 +79,14 @@
       }
 
       .header h1 {
-        font-size: 22px;
+        font-size: 1.5rem;
         font-weight: 700;
         letter-spacing: -0.02em;
         margin-bottom: 6px;
       }
 
       .header p {
-        font-size: 14px;
+        font-size: 1rem;
         color: var(--text-muted);
       }
 
@@ -95,7 +100,7 @@
 
       label {
         display: block;
-        font-size: 13px;
+        font-size: 1rem;
         font-weight: 600;
         color: var(--text-muted);
         text-transform: uppercase;
@@ -111,7 +116,7 @@
         border-radius: 8px;
         color: var(--text);
         font-family: var(--mono);
-        font-size: 13px;
+        font-size: 1rem;
         padding: 14px;
         resize: vertical;
         transition: border-color 0.2s;
@@ -126,7 +131,7 @@
       }
 
       .zip-count {
-        font-size: 12px;
+        font-size: 1rem;
         color: var(--text-muted);
         margin-top: 8px;
         font-family: var(--mono);
@@ -161,7 +166,7 @@
 
       .color-hex {
         font-family: var(--mono);
-        font-size: 13px;
+        font-size: 1rem;
         color: var(--text-muted);
       }
 
@@ -172,7 +177,7 @@
         border-radius: 8px;
         color: var(--text);
         font-family: var(--mono);
-        font-size: 13px;
+        font-size: 1rem;
         padding: 10px 12px;
         transition: border-color 0.2s;
       }
@@ -197,7 +202,7 @@
         width: 100%;
         padding: 14px 24px;
         font-family: var(--font);
-        font-size: 15px;
+        font-size: 1rem;
         font-weight: 600;
         border: none;
         border-radius: 8px;
@@ -248,13 +253,13 @@
       }
 
       .progress-text {
-        font-size: 13px;
+        font-size: 1rem;
         color: var(--text-muted);
         font-family: var(--mono);
       }
 
       .input-help {
-        font-size: 12px;
+        font-size: 1rem;
         color: var(--text-muted);
         margin-top: 8px;
       }
@@ -276,7 +281,7 @@
         max-height: 200px;
         overflow-y: auto;
         font-family: var(--mono);
-        font-size: 12px;
+        font-size: 1rem;
         color: var(--text-muted);
         line-height: 1.8;
       }
@@ -315,19 +320,19 @@
       .result-banner.ok {
         background: var(--success-dim);
         border: 1px solid rgba(52, 211, 153, 0.25);
-        color: var(--success);
+        color: var(--text);
       }
 
       .result-banner.partial {
         background: var(--warn-dim);
         border: 1px solid rgba(251, 191, 36, 0.25);
-        color: var(--warn);
+        color: var(--text);
       }
 
       .result-banner.fail {
         background: rgba(248, 113, 113, 0.1);
         border: 1px solid rgba(248, 113, 113, 0.25);
-        color: var(--error);
+        color: var(--text);
       }
 
       .result-banner svg {
@@ -335,7 +340,7 @@
       }
 
       .result-banner span {
-        font-size: 14px;
+        font-size: 1rem;
         font-weight: 500;
       }
 
@@ -352,18 +357,13 @@
       .footer {
         text-align: center;
         margin-top: 32px;
-        font-size: 12px;
+        font-size: 1rem;
         color: #9ea3b4;
       }
     </style>
   </head>
   <body>
     <main class="container">
-      <link rel="icon" href="https://www.twistermc.com/favicon.ico" />
-      <link
-        rel="apple-touch-icon"
-        href="https://www.twistermc.com/apple-touch-icon.png"
-      />
       <div class="header">
         <h1>Zip Code to KML Generator</h1>
         <p>
