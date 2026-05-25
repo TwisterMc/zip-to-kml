@@ -129,11 +129,12 @@
 
       .toc a {
         color: var(--accent);
-        text-decoration: none;
+        text-decoration: underline;
+        text-underline-offset: 2px;
       }
 
       .toc a:hover {
-        text-decoration: underline;
+        text-decoration-thickness: 2px;
       }
 
       .toc a:focus-visible {
@@ -322,18 +323,30 @@
       .callout-info {
         background: var(--accent-dim);
         border-color: var(--accent);
-        color: var(--accent);
+        color: var(--text);
       }
 
       .callout-tip {
         background: var(--success-dim);
         border-color: var(--success);
-        color: var(--success);
+        color: var(--text);
       }
 
       .callout-warn {
         background: var(--warn-dim);
         border-color: var(--warn);
+        color: var(--text);
+      }
+
+      .callout-info .callout-label {
+        color: var(--accent);
+      }
+
+      .callout-tip .callout-label {
+        color: var(--success);
+      }
+
+      .callout-warn .callout-label {
         color: var(--warn);
       }
 
@@ -392,9 +405,9 @@
 
       <section class="quick-overview" aria-labelledby="quick-overview-title">
         <div class="quick-overview-header">
-          <div class="quick-overview-title" id="quick-overview-title">
+          <h2 class="quick-overview-title" id="quick-overview-title">
             Quick Overview
-          </div>
+          </h2>
           <p>
             The full setup only takes a few steps. This is the short version
             from zip code list to an embedded map on your site.
