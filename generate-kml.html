@@ -676,7 +676,7 @@
         function coordsToKmlString(coords) {
           // coords is an array of [lng, lat] pairs.
           return coords
-            .map((c) => c[0].toFixed(5) + "," + c[1].toFixed(5) + ",0")
+            .map((c) => c[0].toFixed(5) + "," + c[1].toFixed(5))
             .join(" ");
         }
 
