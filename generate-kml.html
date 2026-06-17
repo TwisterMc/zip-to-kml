@@ -154,6 +154,10 @@
         gap: 10px;
       }
 
+      .color-hex-input {
+        max-width: 120px;
+      }
+
       input[type="color"] {
         width: 36px;
         height: 36px;
@@ -396,7 +400,18 @@
               <label for="fillColor">Fill Color</label>
               <div class="color-input-wrap">
                 <input type="color" id="fillColor" value="#4f8ff7" />
-                <span class="color-hex" id="fillHex">#4f8ff7</span>
+                <input
+                  type="text"
+                  id="fillHex"
+                  class="color-hex color-hex-input"
+                  value="#4f8ff7"
+                  placeholder="#RRGGBB"
+                  inputmode="text"
+                  autocapitalize="off"
+                  autocomplete="off"
+                  spellcheck="false"
+                  aria-label="Fill color hex value"
+                />
               </div>
             </div>
             <div class="option-group">
@@ -549,8 +564,44 @@
 
         zipInput.addEventListener("input", updateZipCount);
 
+        function normalizeHex(value) {
+          let normalized = String(value || "").trim();
+          if (!normalized) return "";
+          if (!normalized.startsWith("#")) {
+            normalized = "#" + normalized;
+          }
+          return normalized.toLowerCase();
+        }
+
+        function isValidHexColor(value) {
+          return /^#[0-9a-f]{6}$/i.test(value);
+        }
+
         fillColor.addEventListener("input", () => {
-          fillHex.textContent = fillColor.value;
+          fillHex.value = fillColor.value;
+        });
+
+        fillHex.addEventListener("input", () => {
+          const normalized = normalizeHex(fillHex.value);
+          fillHex.value = normalized;
+          if (isValidHexColor(normalized)) {
+            fillHex.removeAttribute("aria-invalid");
+            fillColor.value = normalized;
+          } else {
+            fillHex.setAttribute("aria-invalid", "true");
+          }
+        });
+
+        fillHex.addEventListener("blur", () => {
+          const normalized = normalizeHex(fillHex.value);
+          if (isValidHexColor(normalized)) {
+            fillHex.value = normalized;
+            fillHex.removeAttribute("aria-invalid");
+            fillColor.value = normalized;
+          } else {
+            fillHex.value = fillColor.value;
+            fillHex.removeAttribute("aria-invalid");
+          }
         });
 
         function addLog(msg, cls) {
